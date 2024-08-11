@@ -21,7 +21,9 @@ NEVER EVER update the gradle/android sdk verion, no matter how much android stud
 will completely break the build and your code won't work.
 
 To upload code to the robot, connect to the robots wifi (it's normal if it says no internet) and 
-run ```adb connect 192.168.43.1:5555```.
+run ```adb connect 192.168.43.1:5555``` in a terminal. Build first while on wifi with internet, 
+(or have another wifi dongle for multiple wifi's at once) after that you should be fine. 
+
 This will make it so the robot will show up under devices in android studio, before turning off the 
 robot or running the program, running ```adb disconnect``` is a good idea as sometimes, it can bug
 out and make it impossible to reconnect to the robot without restarting the computer. 
