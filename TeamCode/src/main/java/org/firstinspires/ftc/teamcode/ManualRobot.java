@@ -16,7 +16,7 @@ public class ManualRobot {
     public ManualRobot(Config cfg) {
         config = cfg;
         subSystems.add(new Drive(config));
-        subSystems.add(new Slide(config));
+//        subSystems.add(new Slide(config));
     }
 
     //
