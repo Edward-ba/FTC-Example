@@ -45,10 +45,10 @@ public class Drive implements SubSystem {
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
-        double leftFrontPower = (axial + lateral + yaw) * speed; // DO NOT CHANGE
-        double rightFrontPower = (axial - lateral - yaw) * speed; // DO NOT CHANGE
-        double leftBackPower = (axial - lateral + yaw) * speed; // DO NOT CHANGE
-        double rightBackPower = (axial + lateral - yaw) * speed; // DO NOT CHANGE
+        double leftFrontPower = (axial - yaw - lateral) * speed; // DO NOT CHANGE
+        double rightFrontPower = (axial + yaw + lateral) * speed; // DO NOT CHANGE
+        double leftBackPower = (axial + yaw - lateral) * speed; // DO NOT CHANGE
+        double rightBackPower = (axial - yaw + lateral) * speed; // DO NOT CHANGE
 
         // Normalize the values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.
