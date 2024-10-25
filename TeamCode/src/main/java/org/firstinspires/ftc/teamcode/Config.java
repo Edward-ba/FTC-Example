@@ -21,6 +21,7 @@ public class Config {
     public static final String LEFT_BACK_DRIVE = "backleft";
 
     public static final String SLIDE_MOTOR = "slide";
+    public static final String ARM_MOTOR = "motorarm";
 
     private ElapsedTime runtime = new ElapsedTime();
 

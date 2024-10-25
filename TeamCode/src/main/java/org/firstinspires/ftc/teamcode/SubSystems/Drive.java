@@ -40,7 +40,7 @@ public class Drive implements SubSystem {
         double axial = -config.gamePad1.left_stick_y;  // Note: pushing stick forward gives negative value
         double lateral = config.gamePad1.left_stick_x;
         double yaw = config.gamePad1.right_stick_x;
-        // Take the average of the 2 triggers
+        // Take the average of the 2 trigger
         double speed = 1 - (config.gamePad1.right_trigger + config.gamePad1.left_trigger) / 2;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
