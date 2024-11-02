@@ -19,6 +19,7 @@ public class Arm implements SubSystem {
         armMotor = config.hardwareMap.get(DcMotor.class, Config.ARM_MOTOR);
         // Reset the encoder and set it to be in RUN_TO_POSITION
         armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void update() {

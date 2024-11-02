@@ -18,6 +18,7 @@ public class Slide implements SubSystem {
         slideMotor = config.hardwareMap.get(DcMotor.class, Config.SLIDE_MOTOR);
         // Reset the encoder and set it to be in RUN_TO_POSITION
         slideMotor.setDirection(DcMotor.Direction.FORWARD);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void update() {
