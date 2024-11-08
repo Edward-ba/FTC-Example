@@ -18,10 +18,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class BlueSideTestAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
-        Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(11.8, 70));
+                .strafeTo(new Vector2d(-24, 0));
 
         waitForStart();
 
