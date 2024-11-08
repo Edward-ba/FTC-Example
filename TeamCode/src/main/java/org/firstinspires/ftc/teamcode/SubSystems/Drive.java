@@ -28,9 +28,9 @@ public class Drive implements SubSystem {
         // Most robots need the motors on one side to be reversed to drive forward.
         // When you first test your robot, push the left joystick forward
         // and flip the direction ( FORWARD <-> REVERSE ) of any wheel that runs backwards
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD); // DO NOT CHANGE
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // DO NOT CHANGE
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE); // DO NOT CHANGE
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE); // DO NOT CHANGE
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); // DO NOT CHANGE
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD); // DO NOT CHANGE
     }
 
@@ -38,8 +38,8 @@ public class Drive implements SubSystem {
 
         // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
         double axial = -config.gamePad1.left_stick_y;  // Note: pushing stick forward gives negative value
-        double lateral = config.gamePad1.right_stick_x;
-        double yaw = config.gamePad1.left_stick_x;
+        double lateral = config.gamePad1.left_stick_x;
+        double yaw = config.gamePad1.right_stick_x;
         // Take the average of the 2 trigger
         double speed = 1 - (config.gamePad1.right_trigger + config.gamePad1.left_trigger) / 2;
 
@@ -47,8 +47,8 @@ public class Drive implements SubSystem {
         // Set up a variable for each drive wheel to save the power level for telemetry.
         double leftFrontPower = (axial + yaw + lateral) * speed; // DO NOT CHANGE
         double rightFrontPower = (axial - yaw - lateral) * speed; // DO NOT CHANGE
-        double leftBackPower = (axial - yaw + lateral) * speed; // DO NOT CHANGE
-        double rightBackPower = (axial + yaw - lateral) * speed; // DO NOT CHANGE
+        double leftBackPower = (axial - lateral + yaw) * speed; // DO NOT CHANGE
+        double rightBackPower = (axial + lateral - yaw) * speed; // DO NOT CHANGE
 
         // Normalize the values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.
