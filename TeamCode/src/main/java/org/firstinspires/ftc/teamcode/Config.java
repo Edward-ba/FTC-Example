@@ -22,6 +22,7 @@ public class Config {
 
     public static final String SLIDE_MOTOR = "slide";
     public static final String ARM_MOTOR = "motorarm";
+    public static final String INTAKE = "intake";
 
     private ElapsedTime runtime = new ElapsedTime();
 

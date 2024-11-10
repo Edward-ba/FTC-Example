@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.teamcode.SubSystems.Arm;
+import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 import org.firstinspires.ftc.teamcode.SubSystems.Slide;
 import org.firstinspires.ftc.teamcode.SubSystems.Drive;
 import org.firstinspires.ftc.teamcode.SubSystems.SubSystem;
@@ -19,6 +20,7 @@ public class ManualRobot {
         subSystems.add(new Drive(config));
         subSystems.add(new Slide(config));
         subSystems.add(new Arm(config));
+        subSystems.add(new Intake(config));
     }
 
     //

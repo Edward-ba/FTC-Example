@@ -23,14 +23,7 @@ public class Arm implements SubSystem {
     }
 
     public void update() {
-        if (config.gamePad2.dpad_down) {
-            armMotor.setPower(1);
-        }
-        else if (config.gamePad2.dpad_up) {
-            armMotor.setPower(-1);
-        }
-        else {
-            armMotor.setPower(0);
-        }
+        double armpower = config.gamePad2.right_stick_y;  // Note: pushing stick forward gives negative value
+        armMotor.setPower(armpower/2);
     }
 }
