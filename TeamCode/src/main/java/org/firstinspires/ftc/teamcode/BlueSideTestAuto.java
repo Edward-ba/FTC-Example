@@ -92,9 +92,9 @@ public class BlueSideTestAuto extends LinearOpMode {
         Lift lift = new Lift(hardwareMap);
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(0, 19))
-                .turn(3*Math.PI/8)
-                .strafeTo(new Vector2d(18, -18))
+                .strafeTo(new Vector2d(-23, 16))
+                .turn(Math.PI/4+Math.PI/12)
+                //.strafeTo(new Vector2d(-18, 0))
                 ;
 
         waitForStart();
