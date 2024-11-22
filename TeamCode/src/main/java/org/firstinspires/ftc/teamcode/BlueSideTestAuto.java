@@ -27,6 +27,63 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 @Autonomous(name = "BLUE_TEST_AUTO_PIXEL", group = "Autonomous")
 public class BlueSideTestAuto extends LinearOpMode {
 
+    public class Slide {
+        private DcMotorEx slide;
+        public Slide(HardwareMap hardwareMap) {
+            slide = hardwareMap.get(DcMotorEx.class, org.firstinspires.ftc.teamcode.Config.SLIDE_MOTOR);
+            slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            slide.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+
+        public class SlideUp implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    slide.setPower(0.8);
+                    initialized = true;
+                }
+
+                double pos = slide.getCurrentPosition();
+                packet.put("slidePos", pos);
+                if (pos < 1750) {
+                    return true;
+                } else {
+                    slide.setPower(0);
+                    return false;
+                }
+            }
+        }
+        public Action slideUp() {
+            return new Slide.SlideUp();
+        }
+
+        public class SlideDown implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    slide.setPower(-0.8);
+                    initialized = true;
+                }
+
+                double pos = slide.getCurrentPosition();
+                packet.put("slidePos", pos);
+                if (pos > -100.0) {
+                    return true;
+                } else {
+                    slide.setPower(0);
+                    return false;
+                }
+            }
+        }
+        public Action slideDown(){
+            return new Slide.SlideDown();
+        }
+    }
+
     public class Lift {
         private DcMotorEx lift;
 
@@ -48,7 +105,7 @@ public class BlueSideTestAuto extends LinearOpMode {
 
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos < 5281.1) {
+                if (pos < 4475.1) {
                     return true;
                 } else {
                     lift.setPower(0);
@@ -90,10 +147,11 @@ public class BlueSideTestAuto extends LinearOpMode {
         Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Lift lift = new Lift(hardwareMap);
+        Slide slide = new Slide(hardwareMap);
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(-23, 16))
-                .turn(Math.PI/4+Math.PI/12)
+                .turn(Math.PI/4+Math.PI/11)
                 //.strafeTo(new Vector2d(-18, 0))
                 ;
 
@@ -103,8 +161,10 @@ public class BlueSideTestAuto extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        slide.slideDown(),
                         tab1.build(),
-                        lift.liftUp()
+                        lift.liftUp(),
+                        slide.slideUp()
                 )
         );
 
