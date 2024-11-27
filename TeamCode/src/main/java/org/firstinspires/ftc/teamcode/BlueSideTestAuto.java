@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -15,12 +16,11 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 // Non-RR imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 
 @Config
@@ -142,12 +142,59 @@ public class BlueSideTestAuto extends LinearOpMode {
         }
     }
 
-    @Override
+    public class Outake {
+        private CRServo intake;
+
+        public Outake(HardwareMap hardwareMap) {
+            intake = hardwareMap.get(CRServo.class, org.firstinspires.ftc.teamcode.Config.INTAKE);
+            intake.setDirection(CRServo.Direction.REVERSE);
+        }
+
+        public class OutakeUp implements Action {
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                intake.setPower(1);
+                return true;
+
+            }
+        }
+        public Action outakeUp() {
+            return new OutakeDown();
+        }
+
+        public class OutakeDown implements Action {
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                intake.setPower(-1);
+                return true;
+            }
+        }
+        public Action outakeDown(){
+            return new OutakeDown();
+        }
+
+        public class OutakeStop implements Action {
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                intake.setPower(0);
+                return true;
+            }
+        }
+        public Action outakeStop(){
+            return new OutakeStop();
+        }
+    }
+
+@Override
     public void runOpMode() {
         Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Lift lift = new Lift(hardwareMap);
         Slide slide = new Slide(hardwareMap);
+        Outake outake = new Outake(hardwareMap);
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(-23, 16))
@@ -161,10 +208,13 @@ public class BlueSideTestAuto extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        slide.slideDown(),
-                        tab1.build(),
-                        lift.liftUp(),
-                        slide.slideUp()
+                          slide.slideDown(),
+                          tab1.build(),
+                          lift.liftUp(),
+                          slide.slideUp(),
+                        outake.outakeDown(),
+                        new SleepAction(1.0),
+                        outake.outakeStop()
                 )
         );
 
