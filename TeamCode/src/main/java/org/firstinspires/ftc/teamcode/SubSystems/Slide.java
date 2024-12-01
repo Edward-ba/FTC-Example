@@ -21,7 +21,7 @@ public class Slide implements SubSystem {
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void update() {
-        double slidepower = config.gamePad2.left_stick_y;  // Note: pushing stick forward gives negative value
+        double slidepower = config.gamePad2.right_stick_y;  // Note: pushing stick forward gives negative value
         slideMotor.setPower(slidepower/2);
     }
 }

@@ -65,10 +65,10 @@ public class Drive implements SubSystem {
         }
 
         // Send calculated power to wheels`
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
+        leftFrontDrive.setPower(leftFrontPower*2/3);
+        rightFrontDrive.setPower(rightFrontPower*2/3);
+        leftBackDrive.setPower(leftBackPower*2/3);
+        rightBackDrive.setPower(rightBackPower*2/3);
 
         // leftBackDrive.getCurrentPosition();
 
