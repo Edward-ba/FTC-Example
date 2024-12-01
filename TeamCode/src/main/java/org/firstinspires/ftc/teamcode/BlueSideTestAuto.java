@@ -15,7 +15,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 // Non-RR imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -30,18 +29,11 @@ public class BlueSideTestAuto extends LinearOpMode {
 
     public class Lift {
         private DcMotorEx lift;
-        private DcMotorEx slide;
-        private CRServo cervo;
 
         public Lift(HardwareMap hardwareMap) {
             lift = hardwareMap.get(DcMotorEx.class, org.firstinspires.ftc.teamcode.Config.ARM_MOTOR);
             lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             lift.setDirection(DcMotorSimple.Direction.REVERSE);
-            slide = hardwareMap.get(DcMotorEx.class, org.firstinspires.ftc.teamcode.Config.SLIDE_MOTOR);
-            slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            slide.setDirection(DcMotorSimple.Direction.REVERSE);
-            cervo = hardwareMap.get(CRServo.class, org.firstinspires.ftc.teamcode.Config.INTAKE);
-            cervo.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         public class LiftUp implements Action {
@@ -56,7 +48,7 @@ public class BlueSideTestAuto extends LinearOpMode {
 
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos < 5300.1) {
+                if (pos < 5281.1) {
                     return true;
                 } else {
                     lift.setPower(0);
@@ -91,52 +83,6 @@ public class BlueSideTestAuto extends LinearOpMode {
         public Action liftDown(){
             return new LiftDown();
         }
-        public class slideOut implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-                    slide.setPower(0.8);
-                    initialized = true;
-                }
-
-                double pos = slide.getCurrentPosition();
-                packet.put("slidePos", pos);
-                if (pos < 1800) {
-                    return true;
-                } else {
-                    slide.setPower(0);
-                    return false;
-                }
-            }
-        }
-        public Action slideOut(){
-            return new slideOut();
-        }
-        public class spitOut implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-                    cervo.setPower(-0.8);
-                    initialized = true;
-                }
-
-                double pos = 1;
-                packet.put("slidePos", pos);
-                if (pos < 5000) {
-                    return true;
-                } else {
-                    cervo.setPower(0);
-                    return false;
-                }
-            }
-        }
-        public Action spitOut(){
-            return new spitOut();
-        }
     }
 
     @Override
@@ -146,7 +92,7 @@ public class BlueSideTestAuto extends LinearOpMode {
         Lift lift = new Lift(hardwareMap);
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(-26, 18))
+                .strafeTo(new Vector2d(-23, 16))
                 .turn(Math.PI/4+Math.PI/12)
                 //.strafeTo(new Vector2d(-18, 0))
                 ;
@@ -158,9 +104,7 @@ public class BlueSideTestAuto extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         tab1.build(),
-                        lift.liftUp(),
-                        lift.slideOut(),
-                        lift.spitOut()
+                        lift.liftUp()
                 )
         );
 
