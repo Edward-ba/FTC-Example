@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class Arm implements SubSystem {
-
+double x;
     private final Config config;
     private DcMotor armMotor;
 
@@ -23,7 +23,7 @@ public class Arm implements SubSystem {
     }
 
     public void update() {
-        double armpower = config.gamePad2.right_stick_y;  // Note: pushing stick forward gives negative value
+        double armpower = config.gamePad2.left_stick_y;  // Note: pushing stick forward gives negative value
         armMotor.setPower(armpower/2);
     }
 }
