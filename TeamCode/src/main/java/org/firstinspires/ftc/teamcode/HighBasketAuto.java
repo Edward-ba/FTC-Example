@@ -54,7 +54,7 @@ public class HighBasketAuto extends LinearOpMode {
 
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos < 3600) {
+                if (pos < 5281.1) {
                     return true;
                 } else {
                     lift.setPower(0);
