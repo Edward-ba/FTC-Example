@@ -53,7 +53,7 @@ public class ObservationZoneAuto extends LinearOpMode {
 
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos < 4800) {
+                if (pos < 1000) {
                     return true;
                 } else {
                     lift.setPower(0);
