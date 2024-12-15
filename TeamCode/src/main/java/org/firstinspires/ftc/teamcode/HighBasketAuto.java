@@ -54,7 +54,7 @@ public class HighBasketAuto extends LinearOpMode {
 
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos < 3600) {
+                if (pos < 1850) {
                     return true;
                 } else {
                     lift.setPower(0);
@@ -101,7 +101,8 @@ public class HighBasketAuto extends LinearOpMode {
 
                 double pos = slide.getCurrentPosition();
                 packet.put("slidePos", pos);
-                if (pos < 1800) {
+                //System.out.println(pos);
+                if (pos < -200) {
                     return true;
                 } else {
                     slide.setPower(0);
@@ -125,7 +126,8 @@ public class HighBasketAuto extends LinearOpMode {
 
                 double pos = slide.getCurrentPosition();
                 packet.put("slidePos", pos);
-                if (pos > -100) {
+                //System.out.println(pos);
+                if (pos > -2400) {
                     return true;
                 } else {
                     slide.setPower(0);
@@ -167,8 +169,8 @@ public class HighBasketAuto extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Lift lift = new Lift(hardwareMap);
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(-25, 15))
-                .turn(Math.PI/4+Math.PI/10);
+                .strafeTo(new Vector2d(-28, 14))
+                .turn(Math.PI/4+Math.PI/9);
                 //.strafeTo(new Vector2d(-18, 0))
                 ;
 
