@@ -24,8 +24,8 @@ double x;
 
     public void update() {
         double pos = armMotor.getCurrentPosition();
-        System.out.println(pos);
-        if(pos>-7000){
+        //System.out.println(pos);
+        if(pos>-2000){
             double armpower = config.gamePad2.left_stick_y;  // Note: pushing stick forward gives negative value
             armMotor.setPower(armpower*3/4);
         }
