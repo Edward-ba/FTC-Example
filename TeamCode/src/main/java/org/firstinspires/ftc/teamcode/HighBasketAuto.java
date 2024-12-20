@@ -44,16 +44,15 @@ public class HighBasketAuto extends LinearOpMode {
 
         public class LiftUp implements Action {
             private boolean initialized = false;
-
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
                     lift.setPower(0.8);
                     initialized = true;
                 }
-
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
+                System.out.println(pos);
                 if (pos < 1850) {
                     return true;
                 } else {
@@ -78,7 +77,8 @@ public class HighBasketAuto extends LinearOpMode {
 
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos > 100.0) {
+                System.out.println(pos);
+                if (pos > 5500) {
                     return true;
                 } else {
                     lift.setPower(0);
@@ -101,8 +101,8 @@ public class HighBasketAuto extends LinearOpMode {
 
                 double pos = slide.getCurrentPosition();
                 packet.put("slidePos", pos);
-                //System.out.println(pos);
-                if (pos < -200) {
+                System.out.println(pos);
+                if (pos < 800) {
                     return true;
                 } else {
                     slide.setPower(0);
@@ -126,8 +126,8 @@ public class HighBasketAuto extends LinearOpMode {
 
                 double pos = slide.getCurrentPosition();
                 packet.put("slidePos", pos);
-                //System.out.println(pos);
-                if (pos > -2400) {
+                System.out.println(pos);
+                if (pos > -500) {
                     return true;
                 } else {
                     slide.setPower(0);
@@ -140,17 +140,17 @@ public class HighBasketAuto extends LinearOpMode {
         }
         public class spitOut implements Action {
             private boolean initialized = false;
-
+            double pos1 = 0;
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
                     cervo.setPower(-0.8);
                     initialized = true;
                 }
-
-                double pos = 1;
-                packet.put("slidePos", pos);
-                if (pos < 7000) {
+                pos1 = pos1 + 1;
+                packet.put("slidePos", pos1);
+                System.out.println(pos1);
+                if (pos1 < 7000) {
                     return true;
                 } else {
                     cervo.setPower(0);
