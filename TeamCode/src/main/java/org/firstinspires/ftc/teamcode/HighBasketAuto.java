@@ -29,17 +29,19 @@ public class HighBasketAuto extends LinearOpMode {
     public class Lift {
         private DcMotorEx lift;
         private DcMotorEx slide;
-        private CRServo cervo;
+        private CRServo servo;
 
         public Lift(HardwareMap hardwareMap) {
             lift = hardwareMap.get(DcMotorEx.class, org.firstinspires.ftc.teamcode.Config.ARM_MOTOR);
             lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             lift.setDirection(DcMotorSimple.Direction.REVERSE);
+
             slide = hardwareMap.get(DcMotorEx.class, org.firstinspires.ftc.teamcode.Config.SLIDE_MOTOR);
             slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             slide.setDirection(DcMotorSimple.Direction.REVERSE);
-            cervo = hardwareMap.get(CRServo.class, org.firstinspires.ftc.teamcode.Config.INTAKE);
-            cervo.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            servo = hardwareMap.get(CRServo.class, org.firstinspires.ftc.teamcode.Config.INTAKE);
+            servo.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         public class LiftUp implements Action {
@@ -62,9 +64,7 @@ public class HighBasketAuto extends LinearOpMode {
                 }
             }
         }
-        public Action liftUp() {
-            return new LiftUp();
-        }
+        public Action liftUp() {return new LiftUp();}
 
         public class LiftDown implements Action {
             private boolean initialized = false;
@@ -86,9 +86,8 @@ public class HighBasketAuto extends LinearOpMode {
                 }
             }
         }
-        public Action liftDown(){
-            return new LiftDown();
-        }
+        public Action liftDown() {return new LiftDown();}
+
         public class slideOut implements Action {
             private boolean initialized = false;
 
@@ -110,9 +109,7 @@ public class HighBasketAuto extends LinearOpMode {
                 }
             }
         }
-        public Action slideOut(){
-            return new slideOut();
-        }
+        public Action slideOut() {return new slideOut();}
 
         public class slideIn implements Action {
             private boolean initialized = false;
@@ -135,32 +132,28 @@ public class HighBasketAuto extends LinearOpMode {
                 }
             }
         }
-        public Action slideIn(){
-            return new slideIn();
-        }
-        public class spitOut implements Action {
-            private boolean initialized = false;
+        public Action slideIn() {return new slideIn();}
+
+
+        public class Intaker implements Action {
+            long dt;
+            double power;
+
+            public Intaker(long dt, double power) {
+                this.dt = dt;
+                this.power = power;
+            }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                if (!initialized) {
-                    cervo.setPower(-0.8);
-                    initialized = true;
-                }
-
-                double pos = 1;
-                packet.put("slidePos", pos);
-                if (pos < 7000) {
-                    return true;
-                } else {
-                    cervo.setPower(0);
-                    return false;
-                }
+                servo.setPower(power);
+                sleep(dt);
+                servo.setPower(0);
+                return false;
             }
         }
-        public Action spitOut(){
-            return new spitOut();
-        }
+        public Action intake(long dt, double power) {return new Intaker(dt, power);}
+
     }
 
     @Override
@@ -184,10 +177,9 @@ public class HighBasketAuto extends LinearOpMode {
                         tab1.build(),
                         lift.liftUp(),
                         lift.slideOut(),
-                        lift.spitOut()
+                        lift.intake(500, -0.8)
                 )
         );
-
     }
 }
 
