@@ -66,7 +66,7 @@ public class HighBasketAuto extends LinearOpMode {
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
                 //intiial is -25, limit of 1850 only lifts 1/3, limit of 5000 was really low
-                if (pos < 5400-limit1l) {
+                if (pos < 5200-limit1l) {
                     return true;
                 } else {
                     lift.setPower(0);
@@ -85,10 +85,10 @@ public class HighBasketAuto extends LinearOpMode {
                     lift.setPower(-0.8);
                     initialized = true;
                 }
-
                 double pos = lift.getCurrentPosition();
+                System.out.println(pos-startposl);
                 packet.put("liftPos", pos);
-                if (pos > 100.0) {
+                if (pos > 3700-startposl) {
                     return true;
                 } else {
                     lift.setPower(0);
@@ -113,11 +113,11 @@ public class HighBasketAuto extends LinearOpMode {
                 }else{
                     limit2s = -startposl;
                 }
-                double pos = slide.getCurrentPosition();
+                double pos = slide.getCurrentPosition()-limit2s;
                 packet.put("slidePos", pos);
-                //System.out.println(pos);
+                System.out.println(pos);
                 //initial postion -19, 400 is d, 1500 was too short
-                if (pos < 4000-limit2s) {
+                if (pos < 2000-limit2s) {
                     return true;
                 } else {
                     slide.setPower(0);
@@ -176,6 +176,23 @@ public class HighBasketAuto extends LinearOpMode {
         public Action intake(long dt, double power) {return new Intaker(dt, power);}
 
     }
+    public class movebar implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                initialized = true;
+            }
+            Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(90));
+            MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+            TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
+                    .strafeTo(new Vector2d(-1, -1))
+                    .turn(Math.PI/4-Math.PI/9-Math.PI/2);
+            return false;
+        }
+    }
+    public Action movebar() {return new movebar();}
 
     @Override
     public void runOpMode() {
@@ -183,8 +200,16 @@ public class HighBasketAuto extends LinearOpMode {
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Lift lift = new Lift(hardwareMap);
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(-28, 14))
+                .strafeTo(new Vector2d(-30, 16))
                 .turn(Math.PI/4+Math.PI/9);
+        TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d(-1, -1))
+                .turn(-Math.PI/4-Math.PI/9-Math.PI/3.3);
+        TrajectoryActionBuilder tab3 = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d(0, 10))
+                .strafeTo(new Vector2d(-60, 10))
+                .strafeTo(new Vector2d(-60, 27))
+                //.turn(-Math.PI/4-Math.PI/9-Math.PI/5);
                 //.strafeTo(new Vector2d(-18, 0))
                 ;
 
@@ -198,7 +223,11 @@ public class HighBasketAuto extends LinearOpMode {
                         tab1.build(),
                         lift.liftUp(),
                         lift.slideOut(),
-                        lift.intake(500, -0.8)
+                        lift.intake(500, -0.8),
+                        lift.slideIn(),
+                        tab2.build(),
+                        tab3.build(),
+                        lift.liftDown()
                 )
         );
     }
