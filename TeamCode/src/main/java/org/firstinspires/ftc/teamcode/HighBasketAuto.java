@@ -57,16 +57,18 @@ public class HighBasketAuto extends LinearOpMode {
                     lift.setPower(0.8);
                     initialized = true;
                 }
-                double limit1l;
+                /*double limit1l;
                 if (startposl > 0) {
                     limit1l = startposl;
                 }else{
                     limit1l = -startposl;
-                }
+                }*/
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
                 //intiial is -25, limit of 1850 only lifts 1/3, limit of 5000 was really low
-                if (pos < 5200-limit1l) {
+                System.out.println("pos-startposl = ");
+                System.out.println(pos-startposl);
+                if (pos - startposl< 5200) {
                     return true;
                 } else {
                     lift.setPower(0);
@@ -88,7 +90,9 @@ public class HighBasketAuto extends LinearOpMode {
                 double pos = lift.getCurrentPosition();
                 System.out.println(pos-startposl);
                 packet.put("liftPos", pos);
-                if (pos > 3700-startposl) {
+                System.out.println("pos-startposl2 = ");
+                System.out.println(pos-startposl);
+                if (pos - startposl> 3700) {
                     return true;
                 } else {
                     lift.setPower(0);
@@ -107,17 +111,12 @@ public class HighBasketAuto extends LinearOpMode {
                     slide.setPower(0.8);
                     initialized = true;
                 }
-                double limit2s;
-                if (startposl > 0) {
-                    limit2s = startposl;
-                }else{
-                    limit2s = -startposl;
-                }
-                double pos = slide.getCurrentPosition()-limit2s;
-                packet.put("slidePos", pos);
-                System.out.println(pos-limit2s);
+                double pos_s = slide.getCurrentPosition();
+                packet.put("slidePos", pos_s);
+                System.out.println("pos_s - startposs = ");
+                System.out.println(pos_s - startposs);
                 //initial postion -19, 400 is d, 1500 was too short
-                if (pos < 1799-limit2s) {
+                if (pos_s - startposs < 1799) {
                     return true;
                 } else {
                     slide.setPower(0);
@@ -136,18 +135,11 @@ public class HighBasketAuto extends LinearOpMode {
                     slide.setPower(-0.8);
                     initialized = true;
                 }
-                double limit1s;
-                if (startposs > 0) {
-                    limit1s = startposs;
-                }else{
-                    limit1s = -startposs;
-                }
                 double pos = slide.getCurrentPosition();
                 packet.put("slidePos", pos);
-                System.out.println("a");
-                System.out.println(-300-limit1s);
-                System.out.println(pos);
-                if (pos > 150-limit1s) {
+                System.out.println("pos_s - startposs2 = ");
+                System.out.println(pos-startposs);
+                if (pos-startposs > -150) {
                     return true;
                 } else {
                     slide.setPower(0);
