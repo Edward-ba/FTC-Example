@@ -182,7 +182,7 @@ public class HighBasketAuto extends LinearOpMode {
                 packet.put("liftPos", pos);
                 System.out.println("pos-startposl2 = ");
                 System.out.println(pos-startposl);
-                if (pos - startposl> 2000) {
+                if (pos - startposl> 1500) {
                     return true;
                 } else {
                     lift.setPower(0);
@@ -191,6 +191,29 @@ public class HighBasketAuto extends LinearOpMode {
             }
         }
         public Action LiftDown2() {return new LiftDown2();}
+        public class slideOut2 implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if (!initialized) {
+                    slide.setPower(0.8);
+                    initialized = true;
+                }
+                double pos_s = slide.getCurrentPosition();
+                packet.put("slidePos", pos_s);
+                //System.out.println("pos_s - startposs = ");
+                //System.out.println(pos_s - startposs);
+                //initial postion -19, 400 is d, 1500 was too short
+                if (pos_s - startposs < 1200) {
+                    return true;
+                } else {
+                    slide.setPower(0);
+                    return false;
+                }
+            }
+        }
+        public Action slideOut2() {return new slideOut2();}
     }
 
     public class movebar implements Action {
@@ -217,56 +240,79 @@ public class HighBasketAuto extends LinearOpMode {
         Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Lift lift = new Lift(hardwareMap);
-        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder drivetobasket = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(-30, 16))
                 .turn(Math.PI/4+Math.PI/9);
-        TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder turntofaceforward = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(-1, -1))
                 .turn(-Math.PI/4-Math.PI/9-Math.PI/3.3);
-        TrajectoryActionBuilder tab3 = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder drivetobar = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(0, 10))
                 .strafeTo(new Vector2d(-60, 10))
                 .strafeTo(new Vector2d(-60, 27))
                 //.turn(-Math.PI/4-Math.PI/9-Math.PI/5);
                 //.strafeTo(new Vector2d(-18, 0))
                 ;
-        TrajectoryActionBuilder tab4 = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder turntofacebackward = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(-1, -1))
                 .turn(-Math.PI/10);
         waitForStart();
-        TrajectoryActionBuilder tab5 = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder drivetosample = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(0, -13))
-                .strafeTo(new Vector2d(34, -13))
-                .strafeTo(new Vector2d(34, -10))
+                .strafeTo(new Vector2d(31.5, -13))
+                .strafeTo(new Vector2d(31.5, -7))
                 //.turn(-Math.PI/4-Math.PI/9-Math.PI/5);
                 //.strafeTo(new Vector2d(-18, 0))
                 ;
         TrajectoryActionBuilder tab6 = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(0, 7))
+                .strafeTo(new Vector2d(0, 0))
+                .turn((Math.PI/4+Math.PI/9)*2/3)
+                ;
+        TrajectoryActionBuilder tab7 = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d(20, 30))
+                .strafeTo(new Vector2d(20, 20))
+                .strafeTo(new Vector2d(2, -20))
+                .turn((Math.PI/4+Math.PI/9)*2/3)
+                ;
+        TrajectoryActionBuilder tab8 = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d(0, 19))
+                ;
+        TrajectoryActionBuilder drivetobasket2 = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d(0, -6))
+                .strafeTo(new Vector2d(-31.5, -6))
+                .strafeTo(new Vector2d(-31.5, 13))
                 //.turn(-Math.PI/4-Math.PI/9-Math.PI/5);
                 //.strafeTo(new Vector2d(-18, 0))
                 ;
+        TrajectoryActionBuilder turntofacebackward2 = drive.actionBuilder(initialPose)
+                //.strafeTo(new Vector2d(-1, -1))
+                .turn(Math.PI/10);
+        waitForStart();
 
         if (isStopRequested()) return;
 
         Actions.runBlocking(
                 new SequentialAction(
                         lift.slideIn(),
-                        tab1.build(),
+                        drivetobasket.build(),
                         lift.liftUp(),
                         lift.slideOut(),
                         lift.intake(500, -0.8),
                         lift.slideIn(),
-                        tab2.build(),
-                        tab3.build(),
+                        //turntofaceforward.build(),
+                        //drivetobar.build(),
+                        //lift.LiftDown()
+                        turntofacebackward.build(),
+                        drivetosample.build(),
+                        tab6.build(),
+                        tab7.build(),
+                        tab8.build(),
                         lift.LiftDown()
-                        //tab4.build(),
-                        //tab5.build(),
-                        //tab3.build(),
-                        //lift.LiftDown2(),
-                        //lift.slideOut(),
-                        //tab6.build(),
-                        //lift.intake(500, 0.8)
+                        //lift.intake(800, 1),
+                        //lift.slideIn(),
+                        //lift.liftUp(),
+                        //drivetobasket2.build(),
+                        //turntofacebackward2.build()
                 )
         );
     }

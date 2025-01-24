@@ -25,10 +25,10 @@ public class Intake implements SubSystem {
 
     public void update() {
         if (config.gamePad2.right_bumper) {
-            intake.setPower(2.0);
+            intake.setPower(3.0);
         }
         else if (config.gamePad2.left_bumper) {
-            intake.setPower(-1.0);
+            intake.setPower(-3.0);
         }
         else {
             intake.setPower(0.0);
