@@ -22,6 +22,6 @@ public class Slide implements SubSystem {
     }
     public void update() {
         double slidepower = config.gamePad2.right_stick_y;  // Note: pushing stick forward gives negative value
-        slideMotor.setPower(slidepower/2);
+        slideMotor.setPower(slidepower*2/3.5);
     }
 }
